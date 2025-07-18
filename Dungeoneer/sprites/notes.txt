@@ -1,0 +1,10 @@
+head:
+- bottom width should always be 16 pixels, should be 8 pixels on each side
+torso:
+- default bottom width is 18 pixels, should be 7 pixels between the outside of the waist and the edge of the canvas on average. can be made a pixel wider or thinner.
+- top width should always be 16 pixels, should be 8 pixels on each side
+legs:
+- default top width is 18 pixels, should be 7 pixels between the outside of the waist and the edge of the canvas on average. can be made a pixel wider or thinner. (same as torso)
+- shoes always reach exactly 3 pixels up
+
+revision idea (for the characters as a whole): render the body in layers so it'd go like base > socks > pants > shoes for the legs or base > undergarment > top > coat for the torso etc (may as well keep writing since i already did the other 2. base > eyes > hair > glasses > hat for the head)
