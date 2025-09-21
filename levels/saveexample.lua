@@ -25,7 +25,7 @@ dat = {
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="down"}, {type="Water", direction="left"}, {type="Water", direction="left"}, 0, 0, 0, 0, 0},
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="down"}, {type="Wall"}, {type="Water", direction="up"}, 0, 0, 0, 0, 0},
-			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="right"}, {type="Water", direction="right"}, {type="Water", direction="up"}, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, {type="Box", id=1}, 0, 0, 0, {type="Water", direction="right"}, {type="Water", direction="right"}, {type="Water", direction="up"}, 0, 0, 0, 0, 0},
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

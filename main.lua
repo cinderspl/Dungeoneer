@@ -121,7 +121,7 @@ function love.load()
 	dial.norman = cltk.dialogueInit("dialogue/norman.txt", love)
 
 	cltk.sfx("sfx/cinderSPL Presents~.mp3", love)
-	love.timer.sleep(0.9)
+	love.timer.sleep(1)
 
 	setstate(1)
 end
