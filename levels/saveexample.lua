@@ -12,27 +12,26 @@ dat = {
 		}
 	},
 	settings={
-		theme="Rósa's Rolling Hills",
-<<<<<<< HEAD
-		track = "Meditation."
+		theme="Hills",
+		track = "Ascension!"
 	},
 	data={
 		-- outer layer is x position, inner layer is y position
 		startpos = {4, 4},
 		map={
-			{{{type="Box", id=1, status=1}}, 0, 0},
-			{0, 0, 0},
-			{0, 0, {{type="Switch", id=1}}, 0, {{type="Sign", text="You can probably imagine how much fun I'm having making this~"}}}
+			{0, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, {type="Wall"}, 0},
+			{{type="Wall"}, 0, {type="Water", direction="down"}, {type="Water", direction="down"}, {type="Water", direction="down"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, {type="Wall"}, 0, 0, {type="Sign", text="You can probably imagine how much fun I'm having making this~"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="down"}, {type="Water", direction="left"}, {type="Water", direction="left"}, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="down"}, {type="Wall"}, {type="Water", direction="up"}, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, {type="Water", direction="right"}, {type="Water", direction="right"}, {type="Water", direction="up"}, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{{type="Wall"}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 		}
-=======
-		battles="turnbased" -- can be turnbased, gridbased, or realtime
-	},
-	data={
-		-- outer layer is x position, inner layer is y position
-		{{{type="Box", id=1, status=1}}, {}, {}},
-		{{}, {}, {}},
-		{{}, {}, {{type="Switch", id=1}}}
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	}
 }
 
