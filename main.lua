@@ -1,6 +1,7 @@
 function love.load()
 	require "cltk"
 	game = {}
+<<<<<<< HEAD
 	game.player = {}
 
 	if love.filesystem.getInfo("stored/player.lua") then
@@ -10,6 +11,11 @@ function love.load()
 	game.stored = {} -- things the game has to rememember, like the level list or the player names
 	game.stored.current = {}
 	game.state = 1 -- game state 1 is for the title screen, 2 is for gameplay, 3 is for level designing, 4 is for the library. decimals may be used for more specific states (like searching the catalogue when designing a level)
+=======
+	game.stored = {} -- things the game has to rememember, like the level list or the player names
+	game.state = 1 -- game state 1 is for the title screen, 2 is for gameplay, 3 is for level designing, 4 is for the library. decimals may be used for more specific states (like searching the catalogue when designing a level)
+	title = love.graphics.newImage("sprites/menus/logotemp.png")
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 
 	bgm = love.audio.newSource("ost/Fate At Your Fingertips.mp3", "static")
 	function muswitch(track)
@@ -17,7 +23,10 @@ function love.load()
 		bgm = love.audio.newSource("ost/" .. track .. ".mp3", "static")
 		bgm:setLooping(true)
 		bgm:play()
+<<<<<<< HEAD
 		mutext = {track, 3}
+=======
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	end
 	muswitch("Fate At Your Fingertips")
 
@@ -27,6 +36,7 @@ function love.load()
 	function green() love.graphics.setColor(0, 1, 0) end
 	function blue() love.graphics.setColor(0, 0, 1) end
 	function purple() love.graphics.setColor(0.5, 0, 1) end
+<<<<<<< HEAD
 	function magenta() love.graphics.setColor(1, 0, 1) end
 	function pink() love.graphics.setColor(1, 0.8, 1) end
 	function white() love.graphics.setColor(1, 1, 1) end
@@ -43,11 +53,16 @@ function love.load()
 		r = 0, g = 0, b = 0
 	}
 
+=======
+	function white() love.graphics.setColor(1, 1, 1) end
+
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	dial = {}
 	dial.norman = cltk.dialogueInit("dialogue/norman.txt", love)
 end
 
 function love.update(dt)
+<<<<<<< HEAD
 
 	-- Constant, usually minor actions
 
@@ -143,17 +158,33 @@ function love.update(dt)
 
 		if cltk.button(1, love, 25, 75, 525, 575) then
 			cltk.sfx("sfx/confirm.mp3", love)
+=======
+	if game.state == 1 then
+		if cltk.button(1, love, 0, 200, 200, 300) then
+			game.state = 4
+		end
+	end
+	if game.state == 2 then
+	end
+	if game.state == 4 then
+
+		if cltk.button(1, love, 25, 525, 75, 575) then
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 			game.stored.levels = love.filesystem.getDirectoryItems("levels")
 			game.stored.levels.names = {}
 			for i, v in ipairs(game.stored.levels) do
 				local dat = love.filesystem.load("levels/" .. v)()
 				game.stored.levels.names[i] = dat.meta.name
 			end
+<<<<<<< HEAD
 			love.timer.sleep(0.1)
+=======
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 		end
 
 		for i, v in ipairs(game.stored.levels) do
 			if cltk.button(1, love, 120, 152, i*64, i*64+32) then
+<<<<<<< HEAD
 				cltk.sfx("sfx/confirm.mp3", love)
 				game.state = 4.1
 				muswitch("All Aboard!")
@@ -162,10 +193,18 @@ function love.update(dt)
 				map = game.stored.levels.current.data.map
 				bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
 				love.timer.sleep(0.1)
+=======
+				game.state = 4.1
+				muswitch("All Aboard")
+				game.stored.levels = {}
+				game.stored.levels.current = love.filesystem.load("levels/" ..v)()
+				bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 			end
 		end
 
 	end
+<<<<<<< HEAD
 
 	if game.state == 4.1 then
 		if cltk.button(1, love, 725, 775, 525, 575) then
@@ -186,6 +225,8 @@ function love.update(dt)
 			love.timer.sleep(0.1)
 		end
 	end
+=======
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 end
 
 function love.draw()
@@ -193,6 +234,7 @@ function love.draw()
 
 		-- Title screen
 
+<<<<<<< HEAD
 		if not title then
 			title = love.graphics.newImage("sprites/menus/logotemp.png")
 		end
@@ -202,6 +244,9 @@ function love.draw()
 
 		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(settingsbutton, 704, 504)
+=======
+		love.graphics.setColor(1, 1, 1)
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 		love.graphics.draw(title, 0, 0)
 
 		red()
@@ -211,6 +256,7 @@ function love.draw()
 		blue()
 		love.graphics.rectangle("fill", 0, 350, 200, 100)
 
+<<<<<<< HEAD
 	elseif game.state == 1.1 then
 		blue()
 		love.graphics.rectangle("fill", 0, 0, 800, 600)
@@ -227,10 +273,13 @@ function love.draw()
 			returnbutton = love.graphics.newImage("sprites/menus/return.png")
 		end
 		love.graphics.draw(returnbutton, 32, 504)
+=======
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	elseif game.state == 2 then
 
 		-- Playing a level
 
+<<<<<<< HEAD
 		for y, row in ipairs(map) do
 			for x, tile in ipairs(row) do
 				if tile ~= 0 then
@@ -254,6 +303,8 @@ function love.draw()
 		love.graphics.rectangle("fill", game.player.x*48, game.player.y*48, 64, 96)
 		love.graphics.printf(game.player.meta.display, game.player.x*48, game.player.y*48-20, 64, "justify")
 
+=======
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	elseif game.state == 3 then
 
 		-- Designing a level 
@@ -288,6 +339,7 @@ function love.draw()
 			love.graphics.setColor(1, 1, 1, 0.5)
 			love.graphics.rectangle("fill", 450, 50, 300, 300)
 	end
+<<<<<<< HEAD
 
 
 	-- Popup stuff like music text
@@ -304,3 +356,6 @@ function love.quit()
 
 end
 
+=======
+end
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7

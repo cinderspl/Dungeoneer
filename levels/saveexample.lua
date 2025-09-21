@@ -13,6 +13,7 @@ dat = {
 	},
 	settings={
 		theme="Rósa's Rolling Hills",
+<<<<<<< HEAD
 		track = "Meditation."
 	},
 	data={
@@ -23,6 +24,15 @@ dat = {
 			{0, 0, 0},
 			{0, 0, {{type="Switch", id=1}}, 0, {{type="Sign", text="You can probably imagine how much fun I'm having making this~"}}}
 		}
+=======
+		battles="turnbased" -- can be turnbased, gridbased, or realtime
+	},
+	data={
+		-- outer layer is x position, inner layer is y position
+		{{{type="Box", id=1, status=1}}, {}, {}},
+		{{}, {}, {}},
+		{{}, {}, {{type="Switch", id=1}}}
+>>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	}
 }
 

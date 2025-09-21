@@ -1,0 +1,171 @@
+(first time meeting)
+Yo, heard you'd be comin' around.
+Name's Johnny. They call me Tofu John because I love tofu ALMOST as much as Norman likes their eggs.
+On my life I've seen them binge eat nothing but scrambled eggs at that pancake place for 2 hours that one day...
+Anyway, I'm probably gettin' ahead of myself.
+You've got somewhere to get to, right? Tryna join someone?
+Just tell me where and I'll find you a seat.
+[Type in the SERVER ADDRESS your host gave you]
+Alright, 'cya round.
+
+(below: address not recognized for the first time)
+...Huh, I don't think I've seen that address before.
+Welp, sucks to suck.
+...Nah, you don't suck.
+This sucks though, the whole "wrong address" thing.
+Maybe try double checking it?
+
+(below: exiting out of the menu)
+Not feelin' it right now?
+I getcha.
+Welp, 'cya round.
+
+(below: winning a level for the first time)
+You made that look easy, huh?
+Lemme tell ya, when I look into your eyes I see a fiery spirit like no other.
+...except for that one guy, and that other guy, and...
+...People like you just have a LOTTA fiery spirit, huh?
+Welp, keep that fire burnin'.
+
+(below: quitting a level unprompted for the first time)
+Not feelin' it today, huh?
+Well, I won't chastise ya for it.
+Previous guy though, MAN he'd chew you out!
+What'd they say his name was...
+Was it Claire... Morgan...
+Eric...
+...wait, the previous guy  was...
+...Wait, that was...
+...Well, who cares about that guy now, amirite?
+Better place without him I tell ya.
+
+(below: quitting a level after dying for the first time)
+WOW, you got your butt kicked, huh?
+...Sorry, I bet you're probably already ticked off enough right now...
+Welp, no point in sittin' around complainin' about it.
+C'mon, on your feet...
+Feel free to stop by later if you wanna give it another go
+You hold a LOT more potential than you realize.
+C'ya round.
+
+(below: entering the join menu, normal)
+Alright pal, where 'ya headed?
+[Type in the SERVER ADDRESS your host gave you]
+Alright, good luck out there.
+
+(below: wrong address, normal)
+Ehhhh...
+I don't think that's quite right.
+Maybe double-check the address, 'cause I don't think I recognize it...
+
+(talk #1)
+...
+Look, pal, I'm gonna be honest.
+There's a lot of stuff in life you're gonna wanna do,
+and a lot of stuff in life you won't be able to do,
+and a lot of stuff in life you don't think you CAN do.
+Nothin' wrong with takin' it easy though.
+Life doesn't craft people like Norman very often.
+Don't beat yourself up because you think you're not doing enough.
+...Long as you're still kickin', that's enough for me.
+Talk to 'ya later.
+
+(talk #2)
+...
+Okay, so about Norman.
+Yeah, I know, sometimes it feels like they talk too much,
+but they still feel so VAGUE, don't they?
+Like, when's the last time they actually opened up to someone?
+Are they hiding depression, or are they just doing some kind of "mysterious" schtick?
+Almost all the time they're cooped up in their library, sometimes not even writing...
+and they make BANK from it! How???
+...Well, if I gave a crap, I wouldn't be here right now.
+...Okay, no, screw that, I ain't leavin' this job.
+Believe it or not, movin' this train is my passion in life.
+What's yours?
+
+(talk #3)
+...
+Ever since all the other libraries closed, my sis Charlie's been havin' it rough.
+She used to be Norman's publisher,
+but now all the books they publish go straight into Norman's own massive library.
+I think she's got some kinda music gig now.
+Not composing, but publishing for... someone.
+Dunno who, not my problem, lol.
+Probably an up-and-coming cute chick. She loves those.
+Anyhoo, when you're on your way out, can you stop by and check up on her for me?
+Her place has I THINK, if my memory serves,
+a rainbow tinted circular logo with a quarter note imprinted on it.
+If you see that, go to it.
+You're not gonna regret it.
+Talk to 'ya later.
+
+(talk #4)
+...
+You ever wonder what the water in those blue temples tastes like?
+Like, it looks so sparkly, which implies it's carbonated,
+but also so... ah, what was the word?
+I know I was thinking of a word, but I JUST forgot it.
+...
+SHINY! SHINY was the word!
+And that like neon-cyan color...
+I know it can't be poisonous, I've seen Norman drink it before.
+And Norman's been hospitalized from common colds before.
+Anyhoo, every time I ask them about it, I just get the usual.
+"Press CTRL+S to save levels!"
+Like yeah, I know that! I've played that game with all those dungeons before!
+That train driver from the game is SUPER hot, by the way.
+But anyway, they NEVER tell me anything about the water!
+Is it water?? Is it milk with blue tea in it???
+Next time you're around one of those blue temples, could you please grab a sip and tell me about it later?
+Anything you find interesting, actually.
+'Cause even if it turns out awful... well, you've still got me to complain to!
+Don't worry, I'm not going anywhere.
+Well, I'm actually going a LOT of places, it's kind of my thing,
+but I'll be at this exact location SPECIFICALLY when you need me.
+Welp, before you go...
+Remember to try the water, and other cool stuff!
+Talk to 'ya later.
+
+(talk #5, only if no levels have been made and talk #4 has been discussed)
+...
+Hey, I noticed you haven't made any levels yet.
+What's that about, huh?
+Nothing wrong with it, just...
+...
+No way you're gonna go your WHOLE life without having a go at level-making, right?
+Don't lock yourself outta stuff, pal.
+...
+So, Norman actually got back to me about the water.
+It actually tastes pretty good.
+Maybe you can find your own temple water to try, you know?
+It's easy if you look for it.
+Think about it for a bit.
+Talk to 'ya later.
+
+(talk #5 if levels have been made and talk #4 has been discussed)
+...
+Well, you've been pretty busy, huh?
+Good on your part.
+Me, if I didn't have this train to drive all day,
+I think I'd go insane!
+BAH ha ha ha!
+Norman got back to me about the water, by the way.
+They're definitely a fan.
+Maybe try some next time you stop by...
+Or anything in a similar vein.
+Whatever it is, I'm rootin' for ya.
+Talk to 'ya later.
+
+(talk #6)
+...
+Y'know, driving this train is pretty fun.
+Get to see all sorts of weird places.
+But I don't step out of the train to see them at ground level often.
+You, though?
+You've got the whole world to explore.
+Sure, maybe you don't get the chance very often.
+But if you can, you really should.
+All these places look super cool from up here.
+Don't worry, I'll help 'ya get there.
+Talk to 'ya later.
