@@ -46,7 +46,6 @@ function cltk.bossbar (name, love, hp, maxhp)
   love.graphics.setColor(1,1,1)
 end
 
-<<<<<<< HEAD
 function cltk.sfx(filepath, love)
   local s = love.audio.newSource(filepath, "static")
   s:play()
@@ -58,6 +57,4 @@ function cltk.distance(x1, x2, y1, y2)
 end
 
 
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 return cltk

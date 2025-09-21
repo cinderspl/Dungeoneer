@@ -1,7 +1,12 @@
 function love.load()
+
+	function round(x)
+		-- taken from lume, remind me to credit them before the game releases
+		return math.ceil(x - 0.5)
+	end
+
 	require "cltk"
 	game = {}
-<<<<<<< HEAD
 	game.player = {}
 
 	if love.filesystem.getInfo("stored/player.lua") then
@@ -11,11 +16,6 @@ function love.load()
 	game.stored = {} -- things the game has to rememember, like the level list or the player names
 	game.stored.current = {}
 	game.state = 1 -- game state 1 is for the title screen, 2 is for gameplay, 3 is for level designing, 4 is for the library. decimals may be used for more specific states (like searching the catalogue when designing a level)
-=======
-	game.stored = {} -- things the game has to rememember, like the level list or the player names
-	game.state = 1 -- game state 1 is for the title screen, 2 is for gameplay, 3 is for level designing, 4 is for the library. decimals may be used for more specific states (like searching the catalogue when designing a level)
-	title = love.graphics.newImage("sprites/menus/logotemp.png")
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 
 	bgm = love.audio.newSource("ost/Fate At Your Fingertips.mp3", "static")
 	function muswitch(track)
@@ -23,12 +23,73 @@ function love.load()
 		bgm = love.audio.newSource("ost/" .. track .. ".mp3", "static")
 		bgm:setLooping(true)
 		bgm:play()
-<<<<<<< HEAD
 		mutext = {track, 3}
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	end
-	muswitch("Fate At Your Fingertips")
+
+	function setstate(state)
+		if state == 1 then
+			game.state = 1
+			muswitch("Fate At Your Fingertips")
+
+		elseif state == 1.1 then
+			if not returnbutton then
+				returnbutton = love.graphics.newImage("sprites/menus/return.png")
+			end
+			game.state = 1.1
+
+		elseif state == 1.2 then
+			if not returnbutton then
+				returnbutton = love.graphics.newImage("sprites/menus/return.png")
+			end
+			game.state = 1.2
+
+		elseif state == 2 then
+			local lvl = game.stored.levels.current
+			game.stored.levels = {}
+			game.stored.levels.current = lvl
+
+			game.player.x = game.stored.levels.current.data.startpos[1]
+			game.player.y = game.stored.levels.current.data.startpos[2]
+			game.player.speed = 5
+			game.player.dir = "down"
+
+			muswitch(game.stored.levels.current.settings.track)
+			bg = love.graphics.newImage("sprites/backgrounds/" .. game.stored.levels.current.settings.theme .. ".png")
+			game.state = 2
+
+		elseif state == 3 then
+			map = {}
+			for y=0, 30 do
+				map[y] = {}
+				for x=0, 30 do
+					map[y][x] = 0
+				end
+			end
+			game.stored.selectedtile = "Sign"
+			game.state = 3
+
+		elseif state == 4 then
+			if not returnbutton then
+				returnbutton = love.graphics.newImage("sprites/menus/return.png")
+			end
+			game.stored.levels = love.filesystem.getDirectoryItems("levels")
+			game.stored.levels.names = {}
+			for i, v in ipairs(game.stored.levels) do
+				local dat = love.filesystem.load("levels/" .. v)()
+				game.stored.levels.names[i] = dat.meta.name
+			end
+			bg = love.graphics.newImage("sprites/backgrounds/library.png")
+			muswitch("Library")
+			game.state = 4
+
+		elseif state == 4.1 then
+			map = game.stored.levels.current.data.map
+			bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
+			muswitch("All Aboard!")
+			game.state = 4.1
+		end
+		love.timer.sleep(0.5)
+	end
 
 	function red() love.graphics.setColor(1, 0, 0) end
 	function orange() love.graphics.setColor(1, 0.5, 0) end
@@ -36,10 +97,13 @@ function love.load()
 	function green() love.graphics.setColor(0, 1, 0) end
 	function blue() love.graphics.setColor(0, 0, 1) end
 	function purple() love.graphics.setColor(0.5, 0, 1) end
-<<<<<<< HEAD
 	function magenta() love.graphics.setColor(1, 0, 1) end
 	function pink() love.graphics.setColor(1, 0.8, 1) end
 	function white() love.graphics.setColor(1, 1, 1) end
+	function gray() love.graphics.setColor(0.5, 0.5, 0.5) end
+	function black() love.graphics.setColor(0, 0, 0) end
+
+	camera = require "camera"
 
 	char = {}
 
@@ -53,16 +117,16 @@ function love.load()
 		r = 0, g = 0, b = 0
 	}
 
-=======
-	function white() love.graphics.setColor(1, 1, 1) end
-
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	dial = {}
 	dial.norman = cltk.dialogueInit("dialogue/norman.txt", love)
+
+	cltk.sfx("sfx/cinderSPL Presents~.mp3", love)
+	love.timer.sleep(0.9)
+
+	setstate(1)
 end
 
 function love.update(dt)
-<<<<<<< HEAD
 
 	-- Constant, usually minor actions
 
@@ -81,19 +145,17 @@ function love.update(dt)
 
 		if cltk.button(1, love, 0, 200, 200, 300) then
 			cltk.sfx("sfx/confirm.mp3", love)
-			game.stored.levels = love.filesystem.getDirectoryItems("levels")
-			game.stored.levels.names = {}
-			for i, v in ipairs(game.stored.levels) do
-				local dat = love.filesystem.load("levels/" .. v)()
-				game.stored.levels.names[i] = dat.meta.name
-			end
-			game.state = 4
-			love.timer.sleep(0.1)
+			setstate(4)
+			love.timer.sleep(0.5)
+		end
+		if cltk.button(1, love, 0, 200, 300, 400) then
+			cltk.sfx("sfx/lockin.mp3", love)
+			setstate(3)
 		end
 		if cltk.button(1, love, 704, 768, 504, 568) then
 			cltk.sfx("sfx/confirm.mp3", love)
-			game.state = 1.1
-			love.timer.sleep(0.1)
+			setstate(1.1)
+			love.timer.sleep(0.5)
 		end
 	end
 
@@ -101,132 +163,175 @@ function love.update(dt)
 		if cltk.button(1, love, 32, 96, 504, 568) then
 			cltk.sfx("sfx/cancel.mp3", love)
 			game.state = 1
-			love.timer.sleep(0.1)
+			love.timer.sleep(0.5)
 		end
 		if cltk.button(1, love, 200, 600, 50, 100) then
 			game.player.audio.vol = ((love.mouse.getX() - 200) / 4)
 			cltk.sfx("sfx/select.mp3", love)
-			love.timer.sleep(0.1)
+			love.timer.sleep(0.5)
+		end
+		if cltk.button(1, love, 704, 768, 440, 504) then
+			cltk.sfx("sfx/confirm.mp3", love)
+			game.state = 1.2
+			love.timer.sleep(0.5)
+		end
+	end
+
+	if game.state == 1.2 then
+		if cltk.button(1, love, 32, 96, 504, 568) then
+			cltk.sfx("sfx/cancel.mp3", love)
+			game.state = 1.1
+			love.timer.sleep(0.5)
+		end
+		if cltk.button(1, love, 100, 200, 200, 250) then
+			game.player.video.fov = ((love.mouse.getX() - 100))
+			cltk.sfx("sfx/select.mp3", love)
+			love.timer.sleep(0.5)
 		end
 	end
 
 	if game.state == 2 then
 
+		camera:setPosition(game.player.x*64-368*game.player.video.fov/100, game.player.y*64-252*game.player.video.fov/100)
+		camera.scaleX = game.player.video.fov/100
+		camera.scaleY = game.player.video.fov/100
+
+		local fy = math.floor(game.player.y)
+		local cy = math.ceil(game.player.y)
+		local ry = round(game.player.y)
+		local fx = math.floor(game.player.x)
+		local cx = math.ceil(game.player.x)
+		local rx = round(game.player.x)
+		local near = map[ry][rx]
+		local ul = map[fy][fx]
+		local ur = map[fy][cx]
+		local dl = map[cy][fx]
+		local dr = map[cy][cx]
+
 		if love.keyboard.isScancodeDown(game.player.controls.move_down) then
-			game.player.y = game.player.y + game.player.speed / 48
-			if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "down" end
+			if dl ~= nil and dr ~= nil then
+				if dl ~= 0 or dr ~= 0 then
+					if (ul == 0 or dl.type ~= "Wall") and (dr == 0 or dr.type ~= "Wall") then
+						game.player.y = game.player.y + game.player.speed / 64
+						if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "down" end
+					end
+				else
+					game.player.y = game.player.y + game.player.speed / 64
+					if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "down" end
+				end
+			end
 		end
 
 		if love.keyboard.isScancodeDown(game.player.controls.move_up) then
-			game.player.y = game.player.y - game.player.speed / 48
-			if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "up" end
+			if ul ~= nil and ur ~= nil then
+				if ul ~= 0 or ur ~= 0 then
+					if (ul == 0 or ul.type ~= "Wall") and (ur == 0 or ur.type ~= "Wall") then
+						game.player.y = game.player.y - game.player.speed / 64
+						if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "up" end
+					end
+				else
+					game.player.y = game.player.y - game.player.speed / 64
+					if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "up" end
+				end
+			end
 		end
 
 		if love.keyboard.isScancodeDown(game.player.controls.move_left) then
-			game.player.x = game.player.x - game.player.speed / 48
-			if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "left" end
+			if ul ~= nil and dl ~= nil then
+				if ul ~= 0 or dl ~= 0 then
+					if (ul == 0 or ul.type ~= "Wall") and (dl == 0 or dl.type ~= "Wall") then
+						game.player.x = game.player.x - game.player.speed / 64
+						if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "left" end
+					end
+				else
+					game.player.x = game.player.x - game.player.speed / 64
+					if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "left" end
+				end
+			end
 		end
 
 		if love.keyboard.isScancodeDown(game.player.controls.move_right) then
-			game.player.x = game.player.x + game.player.speed / 48
-			if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "right" end
+			if ur ~= nil and dr ~= nil then
+				if ur ~= 0 or dr ~= 0 then
+					if (ur == 0 or ur.type ~= "Wall") and (dr == 0 or dr.type ~= "Wall") then
+						game.player.x = game.player.x + game.player.speed / 64
+						if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "right" end
+					end
+				else
+					game.player.x = game.player.x + game.player.speed / 64
+					if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "right" end
+				end
+			end
 		end
 
 		for y, row in ipairs(map) do
 			for x, tile in ipairs(row) do
-				if tile ~= 0 then
-					for i, v in ipairs(tile) do
-						if v.type == "Sign" then
-							if math.abs((x - game.player.x)^2 +(y - game.player.y)^2) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
+				if tile and tile ~= 0 then
+					if tile.type == "Sign" then
+						if math.abs((x - game.player.x)^2 +(y - game.player.y)^2) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
 								
-							end
 						end
 					end
+				end
+			end
+		end
+		if near ~= 0 then
+			if near.type == "Water" then
+				if near.direction == "down" then
+					game.player.y = game.player.y + 4*dt
+				elseif near.direction == "up" then
+					game.player.y = game.player.y - 4*dt
+				elseif near.direction == "right" then
+					game.player.x = game.player.x + 4*dt
+				elseif near.direction == "left" then
+					game.player.x = game.player.x - 4*dt
 				end
 			end
 		end
 
 	end
 
+	if game.state == 3 then
+		if love.mouse.isDown(1) then
+			map[math.floor(love.mouse.getY()/64)][math.floor(love.mouse.getX()/64)] = {type="Sign"}
+		end
+	end
+
 	if game.state == 4 then
 
 		if cltk.button(1, love, 725, 775, 525, 575) then
 			cltk.sfx("sfx/cancel.mp3", love)
-			game.state = 1
-			love.timer.sleep(0.1)
+			setstate(1)
 		end
 
 		if cltk.button(1, love, 25, 75, 525, 575) then
 			cltk.sfx("sfx/confirm.mp3", love)
-=======
-	if game.state == 1 then
-		if cltk.button(1, love, 0, 200, 200, 300) then
-			game.state = 4
-		end
-	end
-	if game.state == 2 then
-	end
-	if game.state == 4 then
-
-		if cltk.button(1, love, 25, 525, 75, 575) then
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 			game.stored.levels = love.filesystem.getDirectoryItems("levels")
 			game.stored.levels.names = {}
 			for i, v in ipairs(game.stored.levels) do
 				local dat = love.filesystem.load("levels/" .. v)()
 				game.stored.levels.names[i] = dat.meta.name
 			end
-<<<<<<< HEAD
-			love.timer.sleep(0.1)
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
+			love.timer.sleep(0.5)
 		end
 
 		for i, v in ipairs(game.stored.levels) do
 			if cltk.button(1, love, 120, 152, i*64, i*64+32) then
-<<<<<<< HEAD
 				cltk.sfx("sfx/confirm.mp3", love)
-				game.state = 4.1
-				muswitch("All Aboard!")
 				game.stored.levels = {}
 				game.stored.levels.current = love.filesystem.load("levels/" ..v)()
-				map = game.stored.levels.current.data.map
-				bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
-				love.timer.sleep(0.1)
-=======
-				game.state = 4.1
-				muswitch("All Aboard")
-				game.stored.levels = {}
-				game.stored.levels.current = love.filesystem.load("levels/" ..v)()
-				bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
+				setstate(4.1)
 			end
 		end
 
 	end
-<<<<<<< HEAD
 
 	if game.state == 4.1 then
 		if cltk.button(1, love, 725, 775, 525, 575) then
 			cltk.sfx("sfx/lockin.mp3", love)
-			local lvl = game.stored.levels.current
-			game.stored.levels = {}
-			game.stored.levels.current = lvl
-
-			-- Preparing the player
-
-			game.player.x = game.stored.levels.current.data.startpos[1]
-			game.player.y = game.stored.levels.current.data.startpos[2]
-			game.player.speed = 5
-			game.player.dir = "down"
-
-			game.state = 2
-			muswitch(game.stored.levels.current.settings.track)
-			love.timer.sleep(0.1)
+			setstate(2)
 		end
 	end
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 end
 
 function love.draw()
@@ -234,19 +339,19 @@ function love.draw()
 
 		-- Title screen
 
-<<<<<<< HEAD
 		if not title then
 			title = love.graphics.newImage("sprites/menus/logotemp.png")
 		end
 		if not settingsbutton then
 			settingsbutton = love.graphics.newImage("sprites/menus/settingsenter.png")
 		end
+		if not musicbutton then
+			musicbutton = love.graphics.newImage("sprites/menus/ostenter.png")
+		end		
 
 		love.graphics.setColor(1, 1, 1)
+		love.graphics.draw(musicbutton, 704, 440)
 		love.graphics.draw(settingsbutton, 704, 504)
-=======
-		love.graphics.setColor(1, 1, 1)
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 		love.graphics.draw(title, 0, 0)
 
 		red()
@@ -256,7 +361,6 @@ function love.draw()
 		blue()
 		love.graphics.rectangle("fill", 0, 350, 200, 100)
 
-<<<<<<< HEAD
 	elseif game.state == 1.1 then
 		blue()
 		love.graphics.rectangle("fill", 0, 0, 800, 600)
@@ -269,30 +373,45 @@ function love.draw()
 		love.graphics.printf("" .. game.player.audio.vol, 200 + 4 * game.player.audio.vol, 50, 50, "left", 0, 3)
 
 		white()
-		if not returnbutton then
-			returnbutton = love.graphics.newImage("sprites/menus/return.png")
-		end
 		love.graphics.draw(returnbutton, 32, 504)
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
+		love.graphics.draw(settingsbutton, 704, 440)
+	elseif game.state == 1.2 then
+		blue()
+		love.graphics.rectangle("fill", 0, 0, 800, 600)
+
+		purple()
+		love.graphics.rectangle("fill", 100, 200, 100, 50)
+		red()
+		love.graphics.rectangle("fill", 100, 200, game.player.video.fov, 50)
+		yellow()
+		love.graphics.printf("FOV", 100, 200, 4 * game.player.video.fov, "left", 0, 3 * (game.player.video.fov / 100))
+		love.graphics.printf("" .. game.player.video.fov, 100 + game.player.video.fov, 200, 50, "left", 0, 3)
+
+		white()
+		love.graphics.draw(returnbutton, 32, 504)
 	elseif game.state == 2 then
 
 		-- Playing a level
 
-<<<<<<< HEAD
+		camera:set()
+
+		for x=math.floor(game.player.x-8), math.ceil(game.player.x+8) do
+  		for y=math.floor(game.player.y-8), math.ceil(game.player.y+8) do
+    		love.graphics.draw(bg, (x-1)*64, (y-1)*64)
+	  	end
+		end
+
 		for y, row in ipairs(map) do
 			for x, tile in ipairs(row) do
 				if tile ~= 0 then
-					for i, v in ipairs(tile) do
-						if v.type == "Sign" then
-							orange()
-							love.graphics.rectangle("fill", x*48, y*48, 48, 48)
-							if cltk.distance(x, game.player.x, y, game.player.y) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
-								char.sign.text = {}
-								char.sign.text[1] = v.text
-								cltk.dialogue(char.sign, love, (x-1)*48, (x+2)*48, (y-2)*48, (y)*48, 1)
-								char.sign.text = nil
-							end
+					local sp = love.graphics.newImage("sprites/elements/" .. game.stored.levels.current.settings.theme .. "_" .. tile.type .. ".png")
+					love.graphics.draw(sp, x*64, y*64)
+					if tile.type == "Sign" then
+						if cltk.distance(x, game.player.x, y, game.player.y) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
+							char.sign.text = {}
+							char.sign.text[1] = tile.text
+							cltk.dialogue(char.sign, love, (x-1)*64, (x+2)*64, (y-2)*64, (y)*64, 1)
+							char.sign.text = nil
 						end
 					end
 				end
@@ -300,23 +419,30 @@ function love.draw()
 		end
 
 		white()
-		love.graphics.rectangle("fill", game.player.x*48, game.player.y*48, 64, 96)
-		love.graphics.printf(game.player.meta.display, game.player.x*48, game.player.y*48-20, 64, "justify")
+		love.graphics.rectangle("fill", game.player.x*64, game.player.y*64, 64, 96)
+		love.graphics.printf(game.player.meta.display, game.player.x*64, game.player.y*64-20, 64, "justify")
+		camera:unset()
 
-=======
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7
 	elseif game.state == 3 then
 
 		-- Designing a level 
+		
+		for y, row in ipairs(map) do
+			for x, tile in ipairs(row) do
+				if tile ~= 0 then
+					if tile.type == "Sign" then
+						local sp = love.graphics.newImage("sprites/elements/sign.png")
+						love.graphics.draw(sp, x*64, y*64)
+					end
+				end
+			end
+		end
 
 	elseif game.state == 4 then
 
 		-- Library
-
-		orange()
-		love.graphics.rectangle("fill", 0, 0, 100, 600)
-		love.graphics.rectangle("fill", 700, 0, 800, 600)
 		white()
+		love.graphics.draw(bg, 0, 0, 0, 4, 4)
 
 		local ntable = love.graphics.newImage("sprites/norman/table.png")
 		love.graphics.draw(ntable, 150, 450, 0, 2)
@@ -329,6 +455,9 @@ function love.draw()
 			love.graphics.printf(v, 168, i*64, 632)
 		end
 
+		red()
+		love.graphics.rectangle("fill", 725, 525, 50, 50)
+
 		elseif game.state == 4.1 then
 
 			-- Preparing to enter level
@@ -338,15 +467,17 @@ function love.draw()
 
 			love.graphics.setColor(1, 1, 1, 0.5)
 			love.graphics.rectangle("fill", 450, 50, 300, 300)
+
+			red()
+			love.graphics.rectangle("fill", 725, 525, 50, 50)
 	end
-<<<<<<< HEAD
 
 
 	-- Popup stuff like music text
 
 	if mutext then
 		love.graphics.setColor(1, 0, 0, mutext[2]/2)
-		love.graphics.printf("cinderspl ~" .. mutext[1], 0, 568, 300, "left", 0, 2, 2)
+		love.graphics.printf("cinderspl ~ " .. mutext[1], 0, 568, 300, "left", 0, 2, 2)
 	end
 	white()
 
@@ -356,6 +487,3 @@ function love.quit()
 
 end
 
-=======
-end
->>>>>>> 4603fa5dfc443e3ee2f6cbb6c31ec054333647b7

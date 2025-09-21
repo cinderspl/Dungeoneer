@@ -1,7 +1,28 @@
 Continue Working On Level Loading
-Camera
+Add Tofu John
 Add the rest of the audio settings menu
+Finish Norman's spritework
 Player meta settings menu
 Character customization menu
 Flesh out the library menu
-Level creation
+Level creation (beyond adding signs)
+
+Themes I wanna add:
+- Crystal cavern
+- Demon Castle (thanks Evil!)
+- Desert
+- Tundra
+- Overgrown Ruins (thanks Crafty!)
+- Flower Forest (thanks Chloe!)
+
+Weapons I wanna add:
+- Dagger
+- Katana
+- Whip
+- Shortbow
+- Crossbow
+
+Host creation
+Customizable server IPs 
+Flesh out the train menu
+Joining p2p servers

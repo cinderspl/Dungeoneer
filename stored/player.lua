@@ -13,6 +13,9 @@ dat = {
 	},
 	audio={
 		vol=100
+	},
+	video={
+		fov=100
 	}
 }
 return dat
