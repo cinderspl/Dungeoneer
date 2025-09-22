@@ -9,13 +9,19 @@ dat = {
 		move_right="d",
 		strafe="lshift",
 		dash="space",
-		interact = "e"
+		interact = "e",
+		exit = "escape"
 	},
 	audio={
 		vol=100
 	},
 	video={
 		fov=100
+	},
+	gear={
+		headgear={
+			{id="Headscarf", color="#ffc5cf"}
+		}
 	}
 }
 return dat

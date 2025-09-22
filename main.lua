@@ -44,6 +44,12 @@ function love.load()
 			game.state = 1.2
 
 		elseif state == 2 then
+
+			game.stored.sprites = {}
+			game.stored.sprites.head = love.graphics.newImage("sprites/player/head.png")
+			game.stored.sprites.torso = love.graphics.newImage("sprites/player/torso.png")
+
+			game.stored.sprites.legs = love.graphics.newImage("sprites/player/legs.png")
 			local lvl = game.stored.levels.current
 			game.stored.levels = {}
 			game.stored.levels.current = lvl
@@ -102,6 +108,12 @@ function love.load()
 	function white() love.graphics.setColor(1, 1, 1) end
 	function gray() love.graphics.setColor(0.5, 0.5, 0.5) end
 	function black() love.graphics.setColor(0, 0, 0) end
+
+	function hex2rgb(hex)
+		-- Credit to Jason Bradley!
+    hex = hex:gsub("#","")
+    return tonumber("0x"..hex:sub(1,2)) .. "_" ..  tonumber("0x"..hex:sub(3,4)) .. "_" .. tonumber("0x"..hex:sub(5,6))
+end
 
 	camera = require "camera"
 
@@ -264,6 +276,10 @@ function love.update(dt)
 			end
 		end
 
+		if love.keyboard.isScancodeDown(game.player.controls.exit) then
+			setstate(1)
+		end
+
 		for y, row in ipairs(map) do
 			for x, tile in ipairs(row) do
 				if tile and tile ~= 0 then
@@ -419,8 +435,17 @@ function love.draw()
 		end
 
 		white()
-		love.graphics.rectangle("fill", game.player.x*64, game.player.y*64, 64, 96)
+		love.graphics.draw(game.stored.sprites.head, game.player.x*64, game.player.y*64)
+		love.graphics.draw(game.stored.sprites.torso, game.player.x*64, game.player.y*64+32)
+		love.graphics.draw(game.stored.sprites.legs, game.player.x*64, game.player.y*64+64)
 		love.graphics.printf(game.player.meta.display, game.player.x*64, game.player.y*64-20, 64, "justify")
+		for i, v in ipairs(game.player.gear.headgear) do
+			local c = hex2rgb(v.color)
+			local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
+			love.graphics.setColor(c1/255, c2/255, c3/255)
+			local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
+			love.graphics.draw(sp, game.player.x*64, game.player.y*64)
+		end
 		camera:unset()
 
 	elseif game.state == 3 then

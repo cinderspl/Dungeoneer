@@ -12,7 +12,7 @@ dat = {
 		}
 	},
 	settings={
-		theme="Hills",
+		theme="Temple",
 		track = "Ascension!"
 	},
 	data={
