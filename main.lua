@@ -435,16 +435,25 @@ function love.draw()
 		end
 
 		white()
+		local c = hex2rgb(game.player.meta.tone)
+		local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
+		love.graphics.setColor(c1/255, c2/255, c3/255)
 		love.graphics.draw(game.stored.sprites.head, game.player.x*64, game.player.y*64)
 		love.graphics.draw(game.stored.sprites.torso, game.player.x*64, game.player.y*64+32)
 		love.graphics.draw(game.stored.sprites.legs, game.player.x*64, game.player.y*64+64)
 		love.graphics.printf(game.player.meta.display, game.player.x*64, game.player.y*64-20, 64, "justify")
-		for i, v in ipairs(game.player.gear.headgear) do
-			local c = hex2rgb(v.color)
-			local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
-			love.graphics.setColor(c1/255, c2/255, c3/255)
-			local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
-			love.graphics.draw(sp, game.player.x*64, game.player.y*64)
+		for k, t in pairs(game.player.gear) do
+			local vert = 0
+			for i, v in ipairs(t) do
+				if k == "headger" then vert = 0 end
+				if k == "top" then vert = 32 end
+				if k == "bottom" or k == "shoes" then vert = 64 end
+				local c = hex2rgb(v.color)
+				local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
+				love.graphics.setColor(c1/255, c2/255, c3/255)
+				local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
+				love.graphics.draw(sp, game.player.x*64, game.player.y*64+vert)
+			end
 		end
 		camera:unset()
 

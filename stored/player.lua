@@ -1,6 +1,7 @@
 dat = {
 	meta={id="cinderspl",
-	display="Rósaeolas"
+	display="Rósaeolas",
+	tone="#f0dea3"
 	},
 	controls={
 		move_up="w",
@@ -21,6 +22,15 @@ dat = {
 	gear={
 		headgear={
 			{id="Headscarf", color="#ffc5cf"}
+		},
+		top={
+			{id="ScaleMail", color="#ffffbb"}
+		},
+		bottom={
+			{id="WitchSkirt", color="#bfc5ff"}
+		},
+		shoes={
+			{id="WitchStockings", color="#2baeff"}
 		}
 	}
 }
