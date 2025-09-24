@@ -11,7 +11,8 @@ dat = {
 		strafe="lshift",
 		dash="space",
 		interact = "e",
-		exit = "escape"
+		exit = "escape",
+		atk = "z"
 	},
 	audio={
 		vol=100

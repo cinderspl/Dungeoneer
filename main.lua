@@ -28,6 +28,8 @@ function love.load()
 
 	function setstate(state)
 		if state == 1 then
+			rel_x = 64
+			rel_y = 64
 			game.state = 1
 			muswitch("Fate At Your Fingertips")
 
@@ -45,14 +47,28 @@ function love.load()
 
 		elseif state == 2 then
 
+			-- Loading sprites the game will need constantly so they don't have to be loaded each frame
 			game.stored.sprites = {}
 			game.stored.sprites.head = love.graphics.newImage("sprites/player/head.png")
 			game.stored.sprites.torso = love.graphics.newImage("sprites/player/torso.png")
-
+			game.stored.sprites.rarm = love.graphics.newImage("sprites/player/rarm.png")
+			game.stored.sprites.rarm_raised = love.graphics.newImage("sprites/player/rarm_raised.png")
+			game.stored.sprites.larm = love.graphics.newImage("sprites/player/larm.png")
+			game.stored.sprites.larm_raised = love.graphics.newImage("sprites/player/larm_raised.png")
 			game.stored.sprites.legs = love.graphics.newImage("sprites/player/legs.png")
+
 			local lvl = game.stored.levels.current
 			game.stored.levels = {}
 			game.stored.levels.current = lvl
+
+			-- Loads every sprite the level needs so it doesn't need to be constantly loaded
+			for y, row in ipairs(lvl.data.map) do
+				for x, tile in ipairs(row) do
+					if tile ~= 0 then
+						load('game.stored.sprites.' .. tile.type .. ' = ' .. 'love.graphics.newImage("sprites/elements/' .. game.stored.levels.current.settings.theme .. "_" .. tile.type .. '.png")')()
+					end
+				end
+			end
 
 			game.player.x = game.stored.levels.current.data.startpos[1]
 			game.player.y = game.stored.levels.current.data.startpos[2]
@@ -140,6 +156,9 @@ end
 
 function love.update(dt)
 
+	rel_x = love.graphics.getWidth() / 12.5
+	rel_y = love.graphics.getHeight() / 9.375
+
 	-- Constant, usually minor actions
 
 	if mutext then
@@ -204,7 +223,7 @@ function love.update(dt)
 
 	if game.state == 2 then
 
-		camera:setPosition(game.player.x*64-368*game.player.video.fov/100, game.player.y*64-252*game.player.video.fov/100)
+		camera:setPosition(game.player.x*rel_x-(love.graphics.getWidth()/2 - rel_x/2)*game.player.video.fov/100, game.player.y*rel_y-(love.graphics.getHeight()/2 - rel_y/2)*game.player.video.fov/100)
 		camera.scaleX = game.player.video.fov/100
 		camera.scaleY = game.player.video.fov/100
 
@@ -412,16 +431,16 @@ function love.draw()
 		camera:set()
 
 		for x=math.floor(game.player.x-8), math.ceil(game.player.x+8) do
-  		for y=math.floor(game.player.y-8), math.ceil(game.player.y+8) do
-    		love.graphics.draw(bg, (x-1)*64, (y-1)*64)
+  		for y=math.floor(game.player.y-6), math.ceil(game.player.y+6) do
+    		love.graphics.draw(bg, (x-1)*rel_x, (y-1)*rel_y, 0, rel_x/64, rel_y/64)
 	  	end
 		end
 
 		for y, row in ipairs(map) do
 			for x, tile in ipairs(row) do
 				if tile ~= 0 then
-					local sp = love.graphics.newImage("sprites/elements/" .. game.stored.levels.current.settings.theme .. "_" .. tile.type .. ".png")
-					love.graphics.draw(sp, x*64, y*64)
+					sp = load("return game.stored.sprites." .. tile.type .. "")
+					love.graphics.draw(sp(), x*rel_x, y*rel_y, 0, rel_x/64, rel_y/64)
 					if tile.type == "Sign" then
 						if cltk.distance(x, game.player.x, y, game.player.y) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
 							char.sign.text = {}
@@ -438,21 +457,23 @@ function love.draw()
 		local c = hex2rgb(game.player.meta.tone)
 		local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
 		love.graphics.setColor(c1/255, c2/255, c3/255)
-		love.graphics.draw(game.stored.sprites.head, game.player.x*64, game.player.y*64)
-		love.graphics.draw(game.stored.sprites.torso, game.player.x*64, game.player.y*64+32)
-		love.graphics.draw(game.stored.sprites.legs, game.player.x*64, game.player.y*64+64)
-		love.graphics.printf(game.player.meta.display, game.player.x*64, game.player.y*64-20, 64, "justify")
+		love.graphics.draw(game.stored.sprites.head, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		love.graphics.draw(game.stored.sprites.torso, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		if love.keyboard.isScancodeDown(game.player.controls.atk) then
+			love.graphics.draw(game.stored.sprites.rarm_raised, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		else
+			love.graphics.draw(game.stored.sprites.rarm, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		end
+		love.graphics.draw(game.stored.sprites.larm, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		love.graphics.draw(game.stored.sprites.legs, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+		love.graphics.printf(game.player.meta.display, game.player.x*rel_x, game.player.y*rel_y-20, rel_x, "justify", 0, rel_x/64, rel_y/64)
 		for k, t in pairs(game.player.gear) do
-			local vert = 0
 			for i, v in ipairs(t) do
-				if k == "headger" then vert = 0 end
-				if k == "top" then vert = 32 end
-				if k == "bottom" or k == "shoes" then vert = 64 end
 				local c = hex2rgb(v.color)
 				local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
 				love.graphics.setColor(c1/255, c2/255, c3/255)
 				local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
-				love.graphics.draw(sp, game.player.x*64, game.player.y*64+vert)
+				love.graphics.draw(sp, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
 			end
 		end
 		camera:unset()
