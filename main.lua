@@ -85,17 +85,40 @@ function love.load()
 
 			muswitch(game.stored.levels.current.settings.track)
 			bg = love.graphics.newImage("sprites/backgrounds/" .. game.stored.levels.current.settings.theme .. ".png")
+
 			game.state = 2
 
 		elseif state == 3 then
-			map = {}
+			level = {}
+			level.settings = {
+				theme="Hills",
+				track="Erosion"
+			}
+			level.dat = {startpos = {9, 9}}
+			level.dat.map = {}
 			for y=0, 30 do
-				map[y] = {}
+				level.dat.map[y] = {}
 				for x=0, 30 do
-					map[y][x] = 0
+					level.dat.map[y][x] = 0
 				end
 			end
-			game.stored.selectedtile = "Sign"
+			game.stored.sprites = {}
+			game.stored.selectedtile = "Wall"
+			game.stored.tileid = 1
+			game.stored.toolbar = {"Wall", "Sign", "Water", "Box", 0}
+
+			muswitch(level.settings.track)
+			game.state = 3
+
+			for i, v in ipairs(game.stored.toolbar) do
+				if v ~= 0 then
+					load('game.stored.sprites.' .. v .. ' = ' .. 'love.graphics.newImage("sprites/elements/' .. level.settings.theme .. "_" .. v .. '.png")')()
+					print(v)
+				end
+			end
+
+			bg = love.graphics.newImage("sprites/backgrounds/" .. level.settings.theme .. ".png")
+
 			game.state = 3
 
 		elseif state == 4 then
@@ -345,7 +368,24 @@ function love.update(dt)
 
 	if game.state == 3 then
 		if love.mouse.isDown(1) then
-			map[math.floor(love.mouse.getY()/64)][math.floor(love.mouse.getX()/64)] = {type="Sign"}
+			level.dat.map[math.floor(love.mouse.getY()/rel_y)][math.floor(love.mouse.getX()/rel_x)] = {type = "" .. game.stored.selectedtile .. ""}
+		end
+
+		if love.keyboard.isScancodeDown(game.player.controls.scroll_right) then
+			if game.stored.tileid < #game.stored.toolbar then
+				game.stored.tileid = game.stored.tileid + 1
+				game.stored.selectedtile = game.stored.toolbar[game.stored.tileid]
+			else
+				cltk.sfx("sfx/cancel.mp3", love)
+			end
+		end
+		if love.keyboard.isScancodeDown(game.player.controls.scroll_left) then
+			if game.stored.tileid > 1 then
+				game.stored.tileid = game.stored.tileid - 1
+				game.stored.selectedtile = game.stored.toolbar[game.stored.tileid]
+			else
+				cltk.sfx("sfx/cancel.mp3", love)
+			end
 		end
 	end
 
@@ -506,16 +546,33 @@ function love.draw()
 	elseif game.state == 3 then
 
 		-- Designing a level 
+
+		for x=math.floor(0), math.ceil(13) do
+  		for y=math.floor(0), math.ceil(10) do
+    		love.graphics.draw(bg, (x-1)*rel_x, (y-1)*rel_y, 0, rel_x/64, rel_y/64)
+	  	end
+		end
 		
-		for y, row in ipairs(map) do
+		for y, row in ipairs(level.dat.map) do
 			for x, tile in ipairs(row) do
 				if tile ~= 0 then
-					if tile.type == "Sign" then
-						local sp = love.graphics.newImage("sprites/elements/sign.png")
-						love.graphics.draw(sp, x*64, y*64)
-					end
+					local sp = load("return game.stored.sprites." .. tile.type .. "")()
+					if sp ~= nil then love.graphics.draw(sp, x*rel_x, y*rel_y, 0, rel_x/64, rel_y/64) end
+				--if tile.type == "Sign" then
+				--	if cltk.distance(x, game.player.x, y, game.player.y) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
+				--			char.sign.text = {}
+				--			char.sign.text[1] = tile.text
+				--			cltk.dialogue(char.sign, love, (x-1)*rel_x, (x+2)*rel_x, (y-2)*rel_y, (y)*rel_y, 1, rel_x/64, rel_y/64)
+				--			char.sign.text = nil
+				--	end
+				--end
 				end
 			end
+		end
+
+		if game.stored.selectedtile ~= 0 then
+			local sp = load("return game.stored.sprites." .. game.stored.selectedtile .. "")()
+			love.graphics.draw(sp, 0.5*rel_x, 0.5*rel_y, 0, rel_x/64, rel_y/64)
 		end
 
 	elseif game.state == 4 then

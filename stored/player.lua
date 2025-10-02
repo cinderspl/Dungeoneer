@@ -11,6 +11,10 @@ dat = {
 		strafe="lshift",
 		dash="space",
 		interact = "e",
+		scroll_up = "up",
+		scroll_down = "down",
+		scroll_left = "left",
+		scroll_right = "right",
 		exit = "escape",
 		atk = "z"
 	},
