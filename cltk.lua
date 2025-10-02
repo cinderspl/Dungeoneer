@@ -22,13 +22,15 @@ function cltk.dialogueInit(file, love)
   return full
 end
 
-function cltk.dialogue (char, love, lx, rx, ty, by, i)
+function cltk.dialogue (char, love, lx, rx, ty, by, i, sx, sy)
   local line = char.text[i]
+  local sx = sx or 1
+  local sy = sy or 1
   -- char: the dialogue data of the character making the statement
   love.graphics.setColor(char.br, char.bg, char.bb)
   love.graphics.rectangle("fill", lx, ty, rx-lx, by-ty)
   love.graphics.setColor(char.r, char.g, char.b)
-  love.graphics.printf(line, lx, ty, rx-lx, "left")
+  love.graphics.printf(line, lx, ty, (rx-lx)/2, "left", 0, sx, sy)
   love.graphics.setColor(1,1,1)
 end
 

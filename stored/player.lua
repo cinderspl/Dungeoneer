@@ -32,6 +32,9 @@ dat = {
 		},
 		shoes={
 			{id="WitchStockings", color="#2baeff"}
+		},
+		weapon={
+			{id="Whip", color="#ffc5cf"}
 		}
 	}
 }

@@ -56,6 +56,14 @@ function love.load()
 			game.stored.sprites.larm = love.graphics.newImage("sprites/player/larm.png")
 			game.stored.sprites.larm_raised = love.graphics.newImage("sprites/player/larm_raised.png")
 			game.stored.sprites.legs = love.graphics.newImage("sprites/player/legs.png")
+			game.stored.sprites.weapon = love.graphics.newImage("sprites/player/r" .. game.player.gear.weapon[1].id .. ".png")
+
+			game.stored.sprites.states = {}
+			game.stored.sprites.states.head = ""
+			game.stored.sprites.states.torso = ""
+			game.stored.sprites.states.rarm = ""
+			game.stored.sprites.states.larm = ""
+			game.stored.sprites.states.legs = ""
 
 			local lvl = game.stored.levels.current
 			game.stored.levels = {}
@@ -223,7 +231,10 @@ function love.update(dt)
 
 	if game.state == 2 then
 
-		camera:setPosition(game.player.x*rel_x-(love.graphics.getWidth()/2 - rel_x/2)*game.player.video.fov/100, game.player.y*rel_y-(love.graphics.getHeight()/2 - rel_y/2)*game.player.video.fov/100)
+		local prx = game.player.x*rel_x
+		local pry = game.player.y*rel_y
+
+		camera:setPosition(prx-(love.graphics.getWidth()/2 - rel_x/2)*game.player.video.fov/100, pry-(love.graphics.getHeight()/2 - rel_y/2)*game.player.video.fov/100)
 		camera.scaleX = game.player.video.fov/100
 		camera.scaleY = game.player.video.fov/100
 
@@ -242,7 +253,7 @@ function love.update(dt)
 		if love.keyboard.isScancodeDown(game.player.controls.move_down) then
 			if dl ~= nil and dr ~= nil then
 				if dl ~= 0 or dr ~= 0 then
-					if (ul == 0 or dl.type ~= "Wall") and (dr == 0 or dr.type ~= "Wall") then
+					if (dl == 0 or dl.type ~= "Wall") and (dr == 0 or dr.type ~= "Wall") then
 						game.player.y = game.player.y + game.player.speed / 64
 						if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "down" end
 					end
@@ -293,6 +304,12 @@ function love.update(dt)
 					if not love.keyboard.isScancodeDown(game.player.controls.strafe) then game.player.dir = "right" end
 				end
 			end
+		end
+
+		if love.keyboard.isScancodeDown(game.player.controls.atk) then
+			game.stored.sprites.states.rarm = "_raised"
+		else
+			game.stored.sprites.rarm = ""
 		end
 
 		if love.keyboard.isScancodeDown(game.player.controls.exit) then
@@ -445,7 +462,7 @@ function love.draw()
 						if cltk.distance(x, game.player.x, y, game.player.y) < 1 and love.keyboard.isScancodeDown(game.player.controls.interact) then
 							char.sign.text = {}
 							char.sign.text[1] = tile.text
-							cltk.dialogue(char.sign, love, (x-1)*64, (x+2)*64, (y-2)*64, (y)*64, 1)
+							cltk.dialogue(char.sign, love, (x-1)*rel_x, (x+2)*rel_x, (y-2)*rel_y, (y)*rel_y, 1, rel_x/64, rel_y/64)
 							char.sign.text = nil
 						end
 					end
@@ -457,25 +474,33 @@ function love.draw()
 		local c = hex2rgb(game.player.meta.tone)
 		local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
 		love.graphics.setColor(c1/255, c2/255, c3/255)
-		love.graphics.draw(game.stored.sprites.head, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		love.graphics.draw(game.stored.sprites.torso, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		if love.keyboard.isScancodeDown(game.player.controls.atk) then
-			love.graphics.draw(game.stored.sprites.rarm_raised, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		else
-			love.graphics.draw(game.stored.sprites.rarm, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		end
-		love.graphics.draw(game.stored.sprites.larm, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		love.graphics.draw(game.stored.sprites.legs, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
-		love.graphics.printf(game.player.meta.display, game.player.x*rel_x, game.player.y*rel_y-20, rel_x, "justify", 0, rel_x/64, rel_y/64)
+		local prx = game.player.x*rel_x
+		local pry = game.player.y*rel_y
+		love.graphics.draw(game.stored.sprites.head, prx, pry, 0, rel_x/64, rel_y/64)
+		love.graphics.draw(game.stored.sprites.torso, prx, pry, 0, rel_x/64, rel_y/64)
+		love.graphics.draw(game.stored.sprites.legs, prx, pry, 0, rel_x/64, rel_y/64)
+		game.stored.sprites.rarm = love.graphics.newImage("sprites/player/rarm" .. game.stored.sprites.states.rarm .. ".png")
+		love.graphics.draw(game.stored.sprites.rarm, prx, pry, 0, rel_x/64, rel_y/64)
+		love.graphics.draw(game.stored.sprites.larm, prx, pry, 0, rel_x/64, rel_y/64)
+		love.graphics.printf(game.player.meta.display, prx, pry-20, rel_x, "justify", 0, rel_x/64, rel_y/64)
 		for k, t in pairs(game.player.gear) do
 			for i, v in ipairs(t) do
-				local c = hex2rgb(v.color)
-				local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
-				love.graphics.setColor(c1/255, c2/255, c3/255)
-				local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
-				love.graphics.draw(sp, game.player.x*rel_x, game.player.y*rel_y, 0, rel_x/64, rel_y/64)
+				if k ~= "weapon" then
+					local c = hex2rgb(v.color)
+					local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
+					love.graphics.setColor(c1/255, c2/255, c3/255)
+					local sp = love.graphics.newImage("sprites/player/" .. v.id .. ".png")
+					if k == "top" then
+						local sp = love.graphics.newImage("sprites/player/" .. v.id .. "_rarm" .. game.stored.sprites.states.rarm .. ".png")
+						love.graphics.draw(sp, prx, pry, 0, rel_x/64, rel_y/64)
+						local sp = love.graphics.newImage("sprites/player/" .. v.id .. "_larm" .. game.stored.sprites.states.larm .. ".png")
+						love.graphics.draw(sp, prx, pry, 0, rel_x/64, rel_y/64)
+					end
+					love.graphics.draw(sp, prx, pry, 0, rel_x/64, rel_y/64)
+				end
 			end
 		end
+		love.graphics.draw(game.stored.sprites.weapon, prx, pry, 0, rel_x/64, rel_y/64)
 		camera:unset()
 
 	elseif game.state == 3 then

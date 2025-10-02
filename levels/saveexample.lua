@@ -13,7 +13,7 @@ dat = {
 	},
 	settings={
 		theme="Temple",
-		track = "Ascension!"
+		track = "Erosion"
 	},
 	data={
 		-- outer layer is x position, inner layer is y position
