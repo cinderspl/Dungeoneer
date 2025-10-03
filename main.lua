@@ -367,8 +367,26 @@ function love.update(dt)
 	end
 
 	if game.state == 3 then
+
+		if love.keyboard.isScancodeDown(game.player.controls.move_up) then
+			camera:move(0, -2*rel_y*dt)
+		end
+		if love.keyboard.isScancodeDown(game.player.controls.move_down) then
+			camera:move(0, 2*rel_y*dt)
+		end
+		if love.keyboard.isScancodeDown(game.player.controls.move_right) then
+			camera:move(2*rel_x*dt, 0)
+		end
+		if love.keyboard.isScancodeDown(game.player.controls.move_left) then
+			camera:move(-2*rel_x*dt, 0)
+		end
+
 		if love.mouse.isDown(1) then
-			level.dat.map[math.floor(love.mouse.getY()/rel_y)][math.floor(love.mouse.getX()/rel_x)] = {type = "" .. game.stored.selectedtile .. ""}
+			if game.stored.selectedtile ~= 0 then
+				level.dat.map[math.floor((love.mouse.getY()+camera.y)/rel_y)][math.floor((love.mouse.getX()+camera.x)/rel_x)] = {type = "" .. game.stored.selectedtile .. ""}
+			else
+				level.dat.map[math.floor((love.mouse.getY()+camera.y)/rel_y)][math.floor((love.mouse.getX()+camera.x)/rel_x)] = 0	
+			end
 		end
 
 		if love.keyboard.isScancodeDown(game.player.controls.scroll_right) then
@@ -547,8 +565,10 @@ function love.draw()
 
 		-- Designing a level 
 
-		for x=math.floor(0), math.ceil(13) do
-  		for y=math.floor(0), math.ceil(10) do
+		camera:set()
+
+		for x=math.floor(camera.x/rel_x), math.ceil(camera.x/rel_x+13) do
+  		for y=math.floor(camera.y/rel_y), math.ceil(camera.y/rel_y+10) do
     		love.graphics.draw(bg, (x-1)*rel_x, (y-1)*rel_y, 0, rel_x/64, rel_y/64)
 	  	end
 		end
@@ -574,6 +594,8 @@ function love.draw()
 			local sp = load("return game.stored.sprites." .. game.stored.selectedtile .. "")()
 			love.graphics.draw(sp, 0.5*rel_x, 0.5*rel_y, 0, rel_x/64, rel_y/64)
 		end
+
+		camera:unset()
 
 	elseif game.state == 4 then
 
