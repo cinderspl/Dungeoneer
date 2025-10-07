@@ -1,7 +1,8 @@
 dat = {
 	meta={id="cinderspl",
 	display="Rósaeolas",
-	tone="#f0dea3"
+	tone="#f0dea3",
+	favc = "#ffc5cf"
 	},
 	controls={
 		move_up="w",
@@ -16,6 +17,9 @@ dat = {
 		scroll_left = "left",
 		scroll_right = "right",
 		exit = "escape",
+		enter = "return",
+		back = "backspace",
+		save = {"lctrl", "s"},
 		atk = "z"
 	},
 	audio={

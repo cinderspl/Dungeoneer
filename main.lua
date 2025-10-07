@@ -5,6 +5,22 @@ function love.load()
 		return math.ceil(x - 0.5)
 	end
 
+	function sendmsg(msg)
+		if chat then	
+			for i=12, 1, -1 do
+				if i == 12 then
+					chat[i] = nil
+				else
+					chat[i+1] = chat[i]
+				end
+			end
+			chat[1] = msg
+		end
+	end
+
+	textbox = false
+	textinput = ""
+
 	require "cltk"
 	game = {}
 	game.player = {}
@@ -14,6 +30,12 @@ function love.load()
 	end
 
 	game.stored = {} -- things the game has to rememember, like the level list or the player names
+	game.directory = love.filesystem.getSaveDirectory()
+	if love.filesystem.getInfo(game.directory .. "levels") == nil then
+		print(love.filesystem.createDirectory(game.directory .. "/levels"))
+	else
+		print("Found level save directory at" .. game.directory .. "/levels" .. "!")
+	end
 	game.stored.current = {}
 	game.state = 1 -- game state 1 is for the title screen, 2 is for gameplay, 3 is for level designing, 4 is for the library. decimals may be used for more specific states (like searching the catalogue when designing a level)
 
@@ -113,7 +135,6 @@ function love.load()
 			for i, v in ipairs(game.stored.toolbar) do
 				if v ~= 0 then
 					load('game.stored.sprites.' .. v .. ' = ' .. 'love.graphics.newImage("sprites/elements/' .. level.settings.theme .. "_" .. v .. '.png")')()
-					print(v)
 				end
 			end
 
@@ -136,6 +157,7 @@ function love.load()
 			game.state = 4
 
 		elseif state == 4.1 then
+			chat = {}
 			map = game.stored.levels.current.data.map
 			bg = love.graphics.newImage("sprites/backgrounds/trainbg.png")
 			muswitch("All Aboard!")
@@ -180,7 +202,7 @@ end
 	dial.norman = cltk.dialogueInit("dialogue/norman.txt", love)
 
 	cltk.sfx("sfx/cinderSPL Presents~.mp3", love)
-	love.timer.sleep(1)
+	love.timer.sleep(1.3)
 
 	setstate(1)
 end
@@ -369,16 +391,16 @@ function love.update(dt)
 	if game.state == 3 then
 
 		if love.keyboard.isScancodeDown(game.player.controls.move_up) then
-			camera:move(0, -2*rel_y*dt)
+			camera:move(0, -5*rel_y*dt)
 		end
 		if love.keyboard.isScancodeDown(game.player.controls.move_down) then
-			camera:move(0, 2*rel_y*dt)
+			camera:move(0, 5*rel_y*dt)
 		end
 		if love.keyboard.isScancodeDown(game.player.controls.move_right) then
-			camera:move(2*rel_x*dt, 0)
+			camera:move(5*rel_x*dt, 0)
 		end
 		if love.keyboard.isScancodeDown(game.player.controls.move_left) then
-			camera:move(-2*rel_x*dt, 0)
+			camera:move(-5*rel_x*dt, 0)
 		end
 
 		if love.mouse.isDown(1) then
@@ -405,6 +427,10 @@ function love.update(dt)
 				cltk.sfx("sfx/cancel.mp3", love)
 			end
 		end
+	end
+
+	if love.keyboard.isScancodeDown(game.player.controls.save[1]) and love.keyboard.isScancodeDown(game.player.controls.save[2]) then
+		love.filesystem.write(game.directory .. "/levels/" .. "testsavename.lua", level)
 	end
 
 	if game.state == 4 then
@@ -437,6 +463,30 @@ function love.update(dt)
 	end
 
 	if game.state == 4.1 then
+
+		local utf8 = require("utf8")
+
+		if textbox == true then
+			if love.keyboard.isDown(game.player.controls.enter) then
+				sendmsg({game.player.meta.favc, textinput})
+				textinput = ""
+				textbox = false
+			end
+			if love.keyboard.isDown(game.player.controls.back) then
+				-- taken from Love2D wiki
+        local byteoffset = utf8.offset(textinput, -1)
+
+        if byteoffset then
+            text = string.sub(textinput, 1, byteoffset - 1)
+        end
+      end
+		end
+
+		if cltk.button(1, love, 450, 750, 300, 350) then
+				love.keyboard.setTextInput(true, 450, 300, 300, 50)
+				textbox = true
+		end
+
 		if cltk.button(1, love, 725, 775, 525, 575) then
 			cltk.sfx("sfx/lockin.mp3", love)
 			setstate(2)
@@ -624,8 +674,21 @@ function love.draw()
 			white()
 			love.graphics.draw(bg, 0, 0)
 
-			love.graphics.setColor(1, 1, 1, 0.5)
+			love.graphics.setColor(0, 0, 0, 1)
 			love.graphics.rectangle("fill", 450, 50, 300, 300)
+
+			love.graphics.setColor(1, 1, 1, 1)
+			if textbox == true then love.graphics.setColor(0.5, 0.5, 0.5, 1) end
+			love.graphics.rectangle("fill", 450, 300, 300, 50)
+
+			love.graphics.setColor(0, 0, 0)
+			for i, v in ipairs(chat) do
+				local c = hex2rgb(game.player.meta.favc)
+				local _, _, c1, c2, c3 = string.find(c, "(%d+)_(%d+)_(%d+)")
+				love.graphics.setColor(c1/255, c2/255, c3/255)
+				love.graphics.printf(v[2], 450, 300-i*16, 300)
+			end
+			love.graphics.printf(textinput, 450, 300, 300)
 
 			red()
 			love.graphics.rectangle("fill", 725, 525, 50, 50)
@@ -642,7 +705,12 @@ function love.draw()
 
 end
 
+function love.textinput(text)
+	if textbox == true then
+		textinput = textinput .. text
+	end
+end
+
 function love.quit()
 
 end
-
